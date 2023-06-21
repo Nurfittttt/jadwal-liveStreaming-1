@@ -6,6 +6,7 @@ use App\Models\jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Event;
 class HomeController extends Controller
 {
     /**
@@ -25,10 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $now = Carbon::now()->format('Y-m-d');
-        $jadwalRecord = jadwal::where('tanggal', $now)->first();
+        $jadwals = Event::all();
+        Carbon::setLocale('id');
+        $formattedDate = Carbon::now()->formatLocalized('%Y-%m-%d');
+        // $now = Carbon::now()->format('Y-m-d');
+        // dd($now);
+        // $formattedDate = $now->translatedFormat('d F Y');
+        $jadwalRecord = Event::where('start_date', $formattedDate)->get();
         // dd($jadwalRecord);
-        $users = jadwal::select(DB::raw("COUNT(*) as count"), DB::raw("MONTHNAME(created_at) as month_name"))
+        $users = Event::select(DB::raw("COUNT(*) as count"), DB::raw("MONTHNAME(start_date) as month_name"))
         ->whereYear('created_at', date('Y'))
         ->groupBy(DB::raw("month_name"))
         ->orderBy('id','ASC')
@@ -37,9 +43,6 @@ class HomeController extends Controller
         $labels = $users->keys();
         $data = $users->values();
         
-        return view('home', compact('labels', 'data','now','jadwalRecord'));
-        // return view('home');
-        // return view('home');
-        return view('home');
+        return view('home', compact('labels', 'data','formattedDate','jadwalRecord','jadwals'));
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
@@ -31,8 +32,9 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
+        $jadwals = Event::all();
         $roles = Role::orderBy('id','DESC')->paginate(5);
-        return view('roles.index',compact('roles'))
+        return view('roles.index',compact('roles','jadwals'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -43,8 +45,9 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $jadwals = Event::all();
         $permission = Permission::get();
-        return view('roles.create',compact('permission'));
+        return view('roles.create',compact('permission','jadwals'));
     }
     
     /**
@@ -74,12 +77,13 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        $jadwals = Event::all();
         $role = Role::find($id);
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
     
-        return view('roles.show',compact('role','rolePermissions'));
+        return view('roles.show',compact('role','rolePermissions','jadwals'));
     }
     
     /**
@@ -90,13 +94,14 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
+        $jadwals = Event::all();
         $role = Role::find($id);
         $permission = Permission::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
     
-        return view('roles.edit',compact('role','permission','rolePermissions'));
+        return view('roles.edit',compact('role','permission','rolePermissions','jadwals'));
     }
     
     /**

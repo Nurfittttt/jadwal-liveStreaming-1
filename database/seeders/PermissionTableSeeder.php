@@ -23,10 +23,18 @@ class PermissionTableSeeder extends Seeder
             'pemakaian-create',
             'pemakaian-edit',
             'pemakaian-delete',
+            'inventaris-list',
+            'inventaris-create',
+            'inventaris-edit',
+            'inventaris-delete',
             'role-list',
             'role-create',
             'role-edit',
-            'role-delete'
+            'role-delete',
+            'user-list',
+            'user-create',
+            'user-edit',
+            'user-delete'
          ];
       
          foreach ($permissions as $permission) {

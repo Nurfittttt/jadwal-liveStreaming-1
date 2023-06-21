@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\inventaris;
 use App\Models\pemakaian;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 class pemakaianController extends Controller
 {
     /**
@@ -26,8 +29,11 @@ class pemakaianController extends Controller
      */
     public function index()
     {
-        $pemakaian = pemakaian::latest()->paginate(5);
-        return view('pemakaians.index',compact('pemakaian'))
+        $jadwals = Event::all();
+        $pemakaian = pemakaian::all();
+       
+        $barang = inventaris::all();
+        return view('pemakaians.index',compact('pemakaian','barang','jadwals'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -49,13 +55,22 @@ class pemakaianController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
-            'name' => 'required',
-            'detail' => 'required',
+        
+        $data = $request->validate([
+            'Nama_Pemakaian' => 'required',
+            'Nama_barang' => 'required',
+            'tanggal_pakai' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'keterangan' => 'required'
+            // 'pj_pemakaian' => 'required'
         ]);
+        // dd($data);
+        // $data['tags'] = implode(",", $request->tags);
+        $data['Nama_barang'] = json_encode($request->Nama_barang);
+        $data['pj_pemakaian'] = Auth::user()->name;
 
-        pemakaian::create($request->all());
-
+        $post = pemakaian::create($data);
         return redirect()->route('pemakaians.index')
                         ->with('success','pemakaian created successfully.');
     }

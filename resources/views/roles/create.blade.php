@@ -66,7 +66,8 @@
         <img src="close.soon" style="display:none;" onerror="(function(el){ setTimeout(function(){ el.parentNode.parentNode.removeChild(el.parentNode); },2000 ); })(this);" />
     </div>
     @endif
-    {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+    {!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
+        {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
         <div class="card mt-4">
             <div class="card-header">
                 <div class="d-flex justify-content-between">

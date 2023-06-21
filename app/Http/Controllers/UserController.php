@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
 use App\Exports\UsersExport;
 use App\Imports\DtkssImport;
+use App\Models\Event;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\HeadingRowImport;
         
@@ -36,12 +37,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $jadwals = Event::all();
         $data = User::orderBy('id','DESC')->paginate(5);
       
         $roles = DB::table('roles')->get();
         // dd($roles);
         // $roles = Role::pluck('name','name')->all();
-        return view('users.index',compact('data','roles'))
+        return view('users.index',compact('data','roles','jadwals'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
@@ -52,8 +54,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        $jadwals = Event::all();
         $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        return view('users.create',compact('roles','jadwals'));
     }
     
     /**

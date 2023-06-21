@@ -48,10 +48,10 @@
                     <thead>
                           <tr>
                             <th>No</th>
-                            <th>Name</th>
+                            <th>Nama</th>
                             <th>Email</th>
                             <th>Roles</th>
-                            <th width="280px">Action</th>
+                            <th width="280px"></th>
                           </tr>
                     </thead>
                     <tbody>

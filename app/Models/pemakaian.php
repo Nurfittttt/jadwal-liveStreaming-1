@@ -10,6 +10,6 @@ class pemakaian extends Model
     use HasFactory;
     protected $table = 'pemakaian';
     protected $fillable = [
-        'name', 'detail'
+        'Nama_Pemakaian','Nama_barang','tanggal_pakai','jam_mulai','jam_selesai', 'keterangan','pj_pemakaian'
     ];
 }

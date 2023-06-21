@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\jadwal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 class jadwalController extends Controller
 {
     /**
@@ -27,16 +28,8 @@ class jadwalController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->ajax()) {  
-            $data = jadwal::whereDate('tanggal', '>=', $request->start)
-                // ->whereDate('event_end',   '<=', $request->end)
-                ->get(['id', 'nama', 'tanggal']);
-            return response()->json($data);
-        }
-        // return view('jadwals.index');
-        $jadwal = jadwal::latest()->paginate(5);
-        return view('jadwals.index',compact('jadwal'))
-            ->with('i', (request()->input('page', 1) - 1) * 5);
+        $jadwals = Event::all();
+        return view('jadwals.index', compact('jadwals'));
     }
 
     /**
@@ -57,12 +50,12 @@ class jadwalController extends Controller
      */
     public function store(Request $request)
     {
-        request()->validate([
-            'name' => 'required',
-            'tanggal' => 'required',
-        ]);
-
-        jadwal::create($request->all());
+        $data['title'] = $request->get('title');
+        $data['start_date'] = $request->get('start_date');
+        // $data['end_date'] = $request->get('end_date');
+        $data['description'] = $request->get('description');
+        $data['jam_acara'] = $request->get('jam_acara');
+        Event::create($data);
 
         return redirect()->route('jadwals.index')
                         ->with('success','jadwal created successfully.');
@@ -89,37 +82,29 @@ class jadwalController extends Controller
     {
         return view('jadwals.edit',compact('jadwal'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\jadwal  $jadwal
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, jadwal $jadwal)
+    public function update(Request $request,$id)
     {
-         request()->validate([
-            'name' => 'required',
-            'tanggal' => 'required',
-        ]);
 
-        $jadwal->update($request->all());
+        request()->validate([
+            'title' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'description' => 'required',
+        ]);
+        $update['title'] = $request->get('title');
+        $update['start_date'] = $request->get('start_date');
+        $update['end_date'] = $request->get('end_date');
+        $update['description'] = $request->get('description');
+        $update['jam_acara'] = $request->get('jam_acara');
+     
+        Event::where('id',$id)->update($update);
 
         return redirect()->route('jadwals.index')
-                        ->with('success','jadwal updated successfully');
+                        ->with('success','inventaris updated successfully');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\jadwal  $jadwal
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(jadwal $jadwal)
+    public function destroy($id)
     {
-        $jadwal->delete();
-
+        DB::table("events")->where('id',$id)->delete();
         return redirect()->route('jadwals.index')
                         ->with('success','jadwal deleted successfully');
     }

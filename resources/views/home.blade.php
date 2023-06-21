@@ -4,11 +4,11 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <!-- <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-    </div>
+    </div> -->
 
     <!-- Content Row -->
 
@@ -44,7 +44,7 @@
                     </div>
                     {{-- <h6 class="m-0 font-weight-bold text-primary">Jadwal Live Streaming</h6> --}}
                     <div class="card-body">
-                      <h1 class="card-title text-center">{{ $now }}</h1>
+                      <h1 class="card-title text-center">{{ $formattedDate }}</h1>
                       {{-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> --}}
                     </div>
                     {{-- @foreach ($jadwalRecord as $item) --}}
@@ -52,8 +52,13 @@
                             @if ($jadwalRecord == null)
                                 <li class="list-group-item">Tidak Ada Jadwal</li>
                             @else
-                                    <li class="list-group-item">{{ $jadwalRecord->name }}</li>
-                                    <li class="list-group-item">{{ $jadwalRecord->tanggal }}</li>
+                            @foreach ($jadwalRecord as $item)
+                                <li class="list-group-item">Acara ke {{ $loop->iteration }}</li>
+                                <li class="list-group-item">{{ $item->title }}</li>
+                                <li class="list-group-item">{{ $item->description }}</li>
+                                <li class="list-group-item">{{ $item->jam_acara }}</li>
+                            @endforeach
+                                    
                             @endif
                         
                           
